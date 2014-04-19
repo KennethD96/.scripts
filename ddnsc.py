@@ -6,7 +6,8 @@ import sys
 ########################
 
 '''Fill in the URL used to update DDNS. Add "<address>" if IP-address is included in the URL.'''
-ddns_update_url = "http://freedns.afraid.org/dynamic/update.php?1337&address=<address>"
+#ddns_update_url = "http://dyn.dns.he.net/nic/update?hostname=<userID>&myip=<address>"
+ddns_update_url = "http://freedns.afraid.org/dynamic/update.php?TXhWTExWTjRQUTVyRVIyWGRVYzBOSzhuOjExNTEwNTY2&address=<address>"
 
 '''Fill HTTP login if DDNS provider uses HTTP for authentication (HE.net is known to do this) or "None" if not.'''
 ddns_http_auth = {
@@ -45,7 +46,8 @@ if mode.lower() == "v6" or mode.lower() == "both":
 	s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
 	s.connect(('2001:db8::', 0))
 	ddns_addresses.append(s.getsockname()[0])
-	log_str("Found address: \"%s\"" % s.getsockname()[0])
+	if debug:
+		log_str("Found address: \"%s\"" % s.getsockname()[0])
 if mode.lower() == "v4" or mode.lower() == "both":
 	if address_scope == "Local":
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -54,7 +56,8 @@ if mode.lower() == "v4" or mode.lower() == "both":
 	else:
 		address = urllib2.urlopen(get_ip4_url).read().strip()
 	ddns_addresses.append(address)
-	log_str("Found address: \"%s\"" % address)
+	if debug:
+		log_str("Found address: \"%s\"" % address)
 
 for address in ddns_addresses:
 	if "<address>" in ddns_update_url:
