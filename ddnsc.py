@@ -7,7 +7,10 @@ import sys
 
 '''Fill in the URL used to update DDNS. Add "<address>" if IP-address is included in the URL.'''
 #ddns_update_url = "http://dyn.dns.he.net/nic/update?hostname=<userID>&myip=<address>"
-ddns_update_url = "http://freedns.afraid.org/dynamic/update.php?TXhWTExWTjRQUTVyRVIyWGRVYzBOSzhuOjExNTEwNTY2&address=<address>"
+ddns_update_url = {
+	6: "http://freedns.afraid.org/dynamic/update.php?ABCD1&address=<address>", # IPv6
+	4: "http://freedns.afraid.org/dynamic/update.php?ABCD2&address=<address>", # IPv4
+}
 
 '''Fill HTTP login if DDNS provider uses HTTP for authentication (HE.net is known to do this) or "None" if not.'''
 ddns_http_auth = {
@@ -60,8 +63,9 @@ if mode.lower() == "v4" or mode.lower() == "both":
 		log_str("Found address: \"%s\"" % address)
 
 for address in ddns_addresses:
-	if "<address>" in ddns_update_url:
-		ddns_update_url_tmp = ddns_update_url.replace("<address>", address)
+	ip_ver = 6 if ":" in address else 4
+	if "<address>" in ddns_update_url[ip_ver]:
+		ddns_update_url_tmp = ddns_update_url[ip_ver].replace("<address>", address)
 		try:
 			ddns_response = urllib2.urlopen(ddns_update_url_tmp, address)
 		except urllib2.HTTPError as err:
