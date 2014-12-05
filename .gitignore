@@ -1,0 +1,6 @@
+# Extentions
+*.exe
+*.pyc
+
+# Files from other repo's
+timelapse-export.py
