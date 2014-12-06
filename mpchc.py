@@ -52,20 +52,26 @@ if "\"" in "".join(args):
 
 # FInd Video path (if any).
 if len(args) > 0:
-    if "." in args[0] or ":" in args[0]:
-        if not "cygwin" in platform.system().lower():
-            args[0] = args[0].strip("\"")
-            if not os.path.isabs(args[0]):
-                open_path = os.path.join(os.getcwd(), args[0])
-                args.pop(0)
-            else:
-                if args[0].endswith("\\"):
-                    args[0] = args[0][:-1]
-                open_path = args[0]
-                args.pop(0)
-        else:
+    if (
+            args[0].count("/") > 1
+            or "." in args[0]
+            or ":" in args[0]
+        ):
+
+        args[0] = args[0].strip("\"")
+        if os.path.isabs(args[0]):
+            if args[0].endswith("\\"):
+                args[0] = args[0][:-1]
             open_path = args[0]
             args.pop(0)
+        elif ":" in args[0]:
+            open_path = args[0]
+            args.pop(0)
+        else:
+            open_path = os.path.join(os.getcwd(), args[0])
+            args.pop(0)
+
+        if "cygwin" in platform.system().lower():
             if open_path.startswith("/cygdrive/"):
                 open_path = open_path.replace("/cygdrive/", "", 1)
                 open_path = open_path.split("/")
