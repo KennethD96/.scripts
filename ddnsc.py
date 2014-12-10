@@ -108,11 +108,11 @@ for address in ddns_addresses:
                 http_response[ip_ver] = urllib2.urlopen(req).read().strip("\n")
             else:
                 log_str(3, 'No login information specified. Skipping update.')
-    try:    
+    try:
         ddns_response[ip_ver] = http_response[ip_ver]
         log_str(1, "Received response: \"%s\"" % http_response[ip_ver])
     except:
         pass
 
 for ip_ver, item in ddns_response.iteritems():
-    log_str(4, '[IPv%s] %s' % (ip_ver, item))
+    log_str(4, '(IPv%s) %s' % (ip_ver, item))
