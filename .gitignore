@@ -1,6 +1,9 @@
 # Extensions
 *.exe
-*.pyc
+*.py[co]
+
+# DDNSc
+conf.py
 
 # Files from other repo's
 timelapse-export.py
