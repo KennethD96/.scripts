@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#encoding: utf-8
+# encoding: utf-8
 import urllib2
 import base64
 import socket
@@ -10,14 +10,15 @@ from os import path
 ########################
 
 '''Fill in the URL(s) used to update DDNS. Add "<address>" if IP-address is included in the URL.'''
-ddns_update_url = { 6: "http://dyn.dns.he.net/nic/update?hostname=domain6.example.com&myip=<address>",
-                    4: None,
+ddns_update_url = {
+    6: "http://dyn.dns.he.net/nic/update?hostname=domain6.example.com&myip=<address>",
+    4: None,
 }
 
 '''Fill in login information if DDNS provider use HTTP for authentication (HE.net is known to do this) or "None" if not.'''
 ddns_http_auth = {
-    6: ("domain4.example.com", "AnAmazingPassword"),
-    4: (None, None),
+    6: ["domain4.example.com", "AnAmazingPassword"],
+    4: [None, None]
 }
 
 '''Should I update only IPv6, only IPv4 or both?
@@ -38,7 +39,7 @@ debug = True
 if path.exists("conf.py"):
     from conf import *
 
-log_level = 1 if debug == True else 2
+log_level = 1 if debug is True else 2
 if "-6" in sys.argv[1::]:
     mode = "v6"
 elif "-4" in sys.argv[1::]:
@@ -48,12 +49,13 @@ ddns_addresses = []
 ddns_response = {}
 http_response = {}
 
+
 def log_str(lvl, string):
     level = {
-        1:"DEBUG",
-        2:"ERROR",
-        3:"WARNING",
-        4:"INFO",
+        1: "DEBUG",
+        2: "ERROR",
+        3: "WARNING",
+        4: "INFO",
     }
     pref = "%s %s: " % (
         time.strftime("%d.%m.%Y %H:%M:%S"),
@@ -104,7 +106,11 @@ for address in ddns_addresses:
                     ddns_http_auth[ip_ver][0],
                     ddns_http_auth[ip_ver][1])
                 )
-                req.add_header("Authorization", "Basic %s" % (base64_auth_string))
+                req.add_header(
+                    "Authorization",
+                    "Basic %s" %
+                    (base64_auth_string)
+                )
                 http_response[ip_ver] = urllib2.urlopen(req).read().strip("\n")
             else:
                 log_str(3, 'No login information specified. Skipping update.')
