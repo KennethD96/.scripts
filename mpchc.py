@@ -1,8 +1,10 @@
 #!/usr/bin/python
-#encoding: utf-8
+# encoding: utf-8
 from subprocess import Popen
 from time import sleep
-import sys, os, platform
+import platform
+import sys
+import os
 
 ####################################################################
 # Usage: mpchc [-w <seconds>] [path to media] [MPC-HC Command Line Switches]
@@ -19,9 +21,9 @@ if platform.system() == "Windows":
 else:
     mpchc_exe = "/cygdrive/c/Program Files (x86)/MPC-HC/mpc-hc.exe"
 
-mpc_args = [] # Contains a list of switches to pass to MPC-HC.
-open_path = "" # Default path to use unless path is specified.
-delay = 0 # The delay to wait before launching the player.
+mpc_args = []  # Contains a list of switches to pass to MPC-HC.
+open_path = ""  # Default path to use unless path is specified.
+delay = 0  # The delay to wait before launching the player.
 
 ####################################################################
 
@@ -30,7 +32,7 @@ args = sys.argv[1::]
 # Parse options for the script.
 usage_str = "Usage: mpchc.py [-w <seconds>] [Path to file] [MPC-HC Switches]"
 if len(args) > 0:
-    if  args[0].startswith("-") and len(args[0]) == 2:
+    if args[0].startswith("-") and len(args[0]) == 2:
         if args[0] == "-w" and len(args) > 1:
             if args[1].isdigit():
                 delay = int(args[1])
@@ -56,7 +58,7 @@ if len(args) > 0:
             args[0].count("/") > 1
             or "." in args[0]
             or ":" in args[0]
-        ):
+    ):
 
         args[0] = args[0].strip("\"")
         if os.path.isabs(args[0]):
