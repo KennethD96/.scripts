@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # encoding: utf-8
+
+########################################################################################
+# A light-weight python-based DDNS Client supporting v6 and v4 with customizable URL's #
+########################################################################################
+
 import urllib2
 import base64
 import socket
