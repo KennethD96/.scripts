@@ -6,27 +6,28 @@ import platform
 import sys
 import os
 
-####################################################################
+##########################################################################################
 # Usage: mpchc [-w <seconds>] [path to media] [MPC-HC Command Line Switches]
 # This is a interface to launch MPC-HC with a optional delay and also includes a set of
 # Variables to set default options to use when MPC-HC is launched.
-# Also includes compatibility with cygwin to launch paths with Unicode characters.
+# Also includes compatibility with cygwin for filenames with unicode characters.
 #
 # Personally I use the script with AnyDVD HD to launch MPC-HC when a disc is inserted
 # It requires a 5 second delay to wait while the disc is mounting.
-####################################################################
+##########################################################################################
 
-if platform.system() == "Windows":
-    mpchc_exe = "C:\Program Files (x86)\MPC-HC\mpc-hc.exe"
-else:
-    mpchc_exe = "/cygdrive/c/Program Files (x86)/MPC-HC/mpc-hc.exe"
+mpchc = {
+    "windows": "C:\Program Files (x86)\MPC-HC\mpc-hc.exe",
+    "cygwin": "/cygdrive/c/Program Files (x86)/MPC-HC/mpc-hc.exe"
+}
 
-mpc_args = []  # Contains a list of switches to pass to MPC-HC.
+mpc_args = []   # Contains a list of default switches to pass to MPC-HC.
 open_path = ""  # Default path to use unless path is specified.
-delay = 0  # The delay to wait before launching the player.
+delay = 0       # The default delay to wait before launching the player.
 
-####################################################################
+##########################################################################################
 
+mpchc_exe = mpchc["windows"] if platform.system() == "Windows" else mpchc["cygwin"]
 args = sys.argv[1::]
 
 # Parse options for the script.
@@ -58,7 +59,7 @@ if len(args) > 0:
             args[0].count("/") > 1
             or "." in args[0]
             or ":" in args[0]
-    ):
+        ):
 
         args[0] = args[0].strip("\"")
         if os.path.isabs(args[0]):
@@ -94,4 +95,4 @@ if os.path.exists(mpchc_exe):
         sleep(delay)
     Popen(mpc_args)
 else:
-    print("MPC-HC Is not installed in specified path.")
+    print("MPC-HC Is not installed in the specified path.")
