@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 ########################################################################################
-# A light-weight python-based DDNS Client supporting v6 and v4 with customizable URL's #
+# A light-weight python-based DDNS Client supporting v6 and v4 with customizable URLs #
 ########################################################################################
 
 import urllib2
@@ -41,8 +41,8 @@ debug = True
 
 ########################
 
-if path.exists("conf.py"):
-    from conf import *
+if path.exists("ddns_conf.py"):
+    from ddns_conf import *
 
 log_level = 1 if debug is True else 2
 if "-6" in sys.argv[1::]:

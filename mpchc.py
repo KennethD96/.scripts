@@ -7,10 +7,10 @@ import sys
 import os
 
 ##########################################################################################
-# Usage: mpchc [-w <seconds>] [path to media] [MPC-HC Command Line Switches]
+# Usage: mpchc [-w <seconds>] [path to media] [MPC-HC Command-Line Switches]
 # This is a interface to launch MPC-HC with a optional delay and also includes a set of
 # Variables to set default options to use when MPC-HC is launched.
-# Also includes compatibility with cygwin for filenames with unicode characters.
+# Warning: For paths containing unicode characters use cygwin!
 #
 # Personally I use the script with AnyDVD HD to launch MPC-HC when a disc is inserted
 # It requires a 5 second delay to wait while the disc is mounting.
@@ -31,7 +31,7 @@ mpchc_exe = mpchc["windows"] if platform.system() == "Windows" else mpchc["cygwi
 args = sys.argv[1::]
 
 # Parse options for the script.
-usage_str = "Usage: mpchc.py [-w <seconds>] [Path to file] [MPC-HC Switches]"
+usage_str = "Usage: mpchc [-w <seconds>] [path to media] [MPC-HC Command-Line Switches]"
 if len(args) > 0:
     if args[0].startswith("-") and len(args[0]) == 2:
         if args[0] == "-w" and len(args) > 1:
@@ -59,7 +59,7 @@ if len(args) > 0:
             args[0].count("/") > 1
             or "." in args[0]
             or ":" in args[0]
-        ):
+    ):
 
         args[0] = args[0].strip("\"")
         if os.path.isabs(args[0]):
