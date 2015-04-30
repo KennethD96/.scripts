@@ -3,7 +3,6 @@
 This is a collection of scripts and snippets I have made to various tasks.
 
 ###ddnsc.py
-
 This is a customizable Dynamic DNS client that support most HTTP-based DDNS services.
 It supports authentication by inline-URL and basic HTTP-Auth (Maybe. I don't actually remember if I got it to work ;D)
 
@@ -19,7 +18,6 @@ Configuration:
 ```
 
 ###mpchc.py
-
 This is a script I made to launch MPC-HC with a time-delay after I have put in a movie disc.
 It also supports passing command-line arguments and unicode paths (using Cygwin).
 It can also be configured to have a delay, pass certain arguments or open a specific path by default (Unless overridden from the command-line)
@@ -29,9 +27,9 @@ Usage: `mpchc [-w <seconds>] [path to media] [MPC-HC Command-line Switches]` (Al
 Executable path for both Windows and Cygwin can be configured from the mpchc variable.
 
 ###parsev6.py
+This is a random snippet I made to try parsing and uncompressing an IPv6 address from a string
 
-This is just a random snippet I made to uncompress an string containing a IPv6 address.
-Usage:
+ Usage-example:
 ```
 from parsev6 import parsev6
 print("Uncompressed IPv6: " + parsev6(raw_input("Please input IPv6-address: "))[0])
