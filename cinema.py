@@ -4,30 +4,27 @@
 lang = {
     "QhueLibMissingMessage": "Missing lib: Qhue. Philips Hue functionality will be disabled.",
     "CouldNotLoadAuraSDKMsg": "Could not load Aura SDK dll: %s",
-    "CouldNotLoadConfErrMsg": "Could not open Configuration file"
+    "CouldNotLoadConfErrMsg": "Could not open Configuration file",
+    "HueUsernameCreateTimeOut": "Did not press link button before time-out."
 }
 
-try:
-    import qhue
-except ImportError:
-    print(lang["QhueLibMissingMessage"])
-
 from subprocess import Popen
-from sys import argv
+from sys import argv, exit
 from os import path, makedirs
-
 import json
-import ctypes
 
 CONFIGDIR = "config"
 CONFIGFILE = "cinema.conf"
 LIBDIR = "lib"
-AuraSDKdll = "AURA_SDK.dll"
+AURASDKDLL = "AURA_SDK.dll"
 
 BASEDIR = path.dirname(path.realpath(__file__))
 CONFIGDIRPATH = path.join(BASEDIR, CONFIGDIR)
 CONFIG = path.join(CONFIGDIRPATH, CONFIGFILE)
 LIBS = path.join(BASEDIR, LIBDIR)
+AURASDK = path.join(LIBS, AURASDKDLL)
+
+args = (argv[1::] if len(argv[1::]) > 0 else [None])
 
 ConfigDefault = {
     "username": None,
@@ -35,6 +32,42 @@ ConfigDefault = {
     "rooms": [1,2],
     "EnableAura": False,
     "EnableHue": False
+}
+
+params = {
+    "Aura": {
+        "shortflag": "a",
+        "longflag": "aura",
+        "description": "Enable Aura support",
+        "state": False,
+        "value": False
+    },
+    "Hue": {
+        "shortflags": "h",
+        "longflag": "hue",
+        "description": "Enable Hue support",
+        "state": False,
+        "value": False
+    }
+}
+
+actions = {
+    "listlights": {
+        "description": "Print information for all available lights.",
+        "state": False
+    },
+    "togglelights": {
+        "description": "Toggle the state of all lights.",
+        "state": False
+    },
+    "lightsoff": {
+        "description": "Turn off all lights.",
+        "state": False
+    },
+    "lightson": {
+        "description": "Turn on all lights.",
+        "state": False
+    }
 }
 
 def writeConfig(configFile, config):
@@ -72,18 +105,29 @@ else:
     config = ConfigDefault
     writeConfig(config)
 
-
-#try:
-#    AuraSDKdllPath = path.join(path.realpath(__file__), libPath, AuraSDKdll)
-#    print(AuraSDKdllPath)
-#    AuraSDKdll = ctypes.WinDLL(AuraSDKdll)
-#except ImportError:
-#    print(lang["CouldNotLoadAuraSDKMsg"] % AuraSDKdll)
+if config["EnableAura"]:
+    import ctypes
+    try:
+        aura = ctypes.WinDLL(AURASDK)
+    except ImportError:
+        print(lang["CouldNotLoadAuraSDKMsg"] % AURASDKDLL)
 
 # Connect to bridge
 if config["EnableHue"]:
-    bridge = qhue.Bridge(config["ip"], config["username"])
-args = (argv[1::] if len(argv[1::]) > 0 else [None])
+    try:
+        import qhue
+        bridge = qhue.Bridge(config["ip"], config["username"])
+        test = bridge.lights()
+    except ImportError:
+        print(lang["QhueLibMissingMessage"])
+    except qhue.qhue.QhueException:
+        try:
+            config["username"] = qhue.create_new_username(config["ip"])
+            bridge = qhue.Bridge(config["ip"], config["username"])
+            writeConfig(CONFIG, config)
+        except qhue.qhue.QhueException:
+            print(lang["HueUsernameCreateTimeOut"])
+            exit()
 
 def setHueLightsState(lights, state):
     if config["EnableHue"]:
