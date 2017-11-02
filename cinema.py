@@ -1,11 +1,11 @@
 #!/usr/bin/python
-#encoding: utf-8
 
 lang = {
     "QhueLibMissingMessage": "Missing lib: Qhue. Philips Hue functionality will be disabled.",
     "CouldNotLoadAuraSDKMsg": "Could not load Aura SDK dll: %s",
     "CouldNotLoadConfErrMsg": "Could not open Configuration file",
-    "HueUsernameCreateTimeOut": "Did not press link button before time-out."
+    "HueUsernameCreateTimeOut": "Did not press link button before time-out.",
+    "HueErrDisabled": "There was an error enabling Hue. Hue will be disabled."
 }
 
 from subprocess import Popen
@@ -31,7 +31,7 @@ ConfigDefault = {
     "ip": "",
     "rooms": [1,2],
     "EnableAura": False,
-    "EnableHue": False
+    "EnableHue": True
 }
 
 params = {
@@ -85,9 +85,7 @@ def readConfig(configFile):
         config = json.loads(config)
         configChanged = False
         for i, v in ConfigDefault.items():
-            if i in config:
-                pass
-            else:
+            if not i in config:
                 config[i] = v
                 configChanged = True
         if configChanged:
@@ -128,6 +126,9 @@ if config["EnableHue"]:
         except qhue.qhue.QhueException:
             print(lang["HueUsernameCreateTimeOut"])
             exit()
+    finally:
+        config["EnableHue"] = False
+        print(lang["HueErrDisabled"])
 
 def setHueLightsState(lights, state):
     if config["EnableHue"]:
