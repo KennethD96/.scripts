@@ -7,3 +7,6 @@ conf.py
 
 # Files from other repo's
 timelapse-export.py
+
+!.gitignore
+

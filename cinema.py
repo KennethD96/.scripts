@@ -126,7 +126,7 @@ if config["EnableHue"]:
         except qhue.qhue.QhueException:
             print(lang["HueUsernameCreateTimeOut"])
             exit()
-    finally:
+    except:
         config["EnableHue"] = False
         print(lang["HueErrDisabled"])
 
