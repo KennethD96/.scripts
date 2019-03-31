@@ -2,7 +2,6 @@
 
 lang = {
     "QhueLibMissingMessage": "Missing lib: Qhue. Philips Hue functionality will be disabled.",
-    "CouldNotLoadAuraSDKMsg": "Could not load Aura SDK dll: %s",
     "CouldNotLoadConfErrMsg": "Could not open Configuration file",
     "HueUsernameCreateTimeOut": "Did not press link button before time-out.",
     "HueErrDisabled": "There was an error enabling Hue. Hue will be disabled."
@@ -16,32 +15,23 @@ import json
 CONFIGDIR = "config"
 CONFIGFILE = "cinema.conf"
 LIBDIR = "lib"
-AURASDKDLL = "AURA_SDK.dll"
 
 BASEDIR = path.dirname(path.realpath(__file__))
 CONFIGDIRPATH = path.join(BASEDIR, CONFIGDIR)
 CONFIG = path.join(CONFIGDIRPATH, CONFIGFILE)
 LIBS = path.join(BASEDIR, LIBDIR)
-AURASDK = path.join(LIBS, AURASDKDLL)
 
 args = (argv[1::] if len(argv[1::]) > 0 else [None])
 
 ConfigDefault = {
     "username": None,
     "ip": "",
-    "rooms": [1,2],
+    "rooms": [1],
     "EnableAura": False,
     "EnableHue": True
 }
 
 params = {
-    "Aura": {
-        "shortflag": "a",
-        "longflag": "aura",
-        "description": "Enable Aura support",
-        "state": False,
-        "value": False
-    },
     "Hue": {
         "shortflags": "h",
         "longflag": "hue",
@@ -102,13 +92,6 @@ else:
         makedirs(CONFIGDIRPATH)
     config = ConfigDefault
     writeConfig(config)
-
-if config["EnableAura"]:
-    import ctypes
-    try:
-        aura = ctypes.WinDLL(AURASDK)
-    except ImportError:
-        print(lang["CouldNotLoadAuraSDKMsg"] % AURASDKDLL)
 
 # Connect to bridge
 if config["EnableHue"]:
