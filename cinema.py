@@ -19,7 +19,6 @@ LIBDIR = "lib"
 BASEDIR = path.dirname(path.realpath(__file__))
 CONFIGDIRPATH = path.join(BASEDIR, CONFIGDIR)
 CONFIG = path.join(CONFIGDIRPATH, CONFIGFILE)
-LIBS = path.join(BASEDIR, LIBDIR)
 
 args = (argv[1::] if len(argv[1::]) > 0 else [None])
 
@@ -27,7 +26,6 @@ ConfigDefault = {
     "username": None,
     "ip": "",
     "rooms": [1],
-    "EnableAura": False,
     "EnableHue": True
 }
 
